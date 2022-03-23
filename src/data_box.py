@@ -9,90 +9,97 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 """
 
 
+"""
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    > WHY
+    To be able to safely return null data.
+    
+"""
 
 from typing import Any
 from typing import Tuple
 
-Maybe_t = Tuple
+DataBox_t = Tuple
 
-class Maybe():
-    # Custom implementation of maybe type.
+class DataBox():
+    # Custom implementation of Option type.
 
-    class ExtractFromNothing(Exception):
+    class ExtractFromEmpty(Exception):
         pass
-
+    #
+    
     @staticmethod
-    def nothing_specifier():
+    def empty_specifier():
         nothing_spec = None
         return nothing_spec
         #
     #
 
     @staticmethod
-    def some_specifier():
+    def full_specifier():
         some_spec = True
         
-        assert(some_spec != Maybe.nothing_specifier()) # Specifiers must be unique.
+        assert(some_spec != DataBox.empty_specifier()) # Specifiers must be unique.
         
         return some_spec
         #
     #
 
     @staticmethod
-    def make_some(data: Any) -> Tuple:
-        return (Maybe.some_specifier(), data)
+    def make_full(data: Any) -> Tuple:
+        return (DataBox.full_specifier(), data)
     #
 
     @staticmethod
-    def make_nothing() -> Tuple:
-        return (Maybe.nothing_specifier(), False) # Second field is unimportant
+    def make_empty() -> Tuple:
+        return (DataBox.empty_specifier(), False) # Second field is unimportant
     #
 
     @staticmethod
     def is_some(arg: Tuple) -> bool:
-        return arg[0] == Maybe.some_specifier()
+        return arg[0] == DataBox.full_specifier()
     #
 
     @staticmethod
-    def is_nothing(arg: Tuple) -> bool:
-        return arg[0]  == Maybe.nothing_specifier()
+    def is_empty(arg: Tuple) -> bool:
+        return arg[0]  == DataBox.empty_specifier()
     #
 
     @staticmethod
     def get_data(arg: Tuple) -> Any:
-        if Maybe.is_nothing(arg):
-            raise Maybe.ExtractFromNothing("Maybe argument is nothing.")
+        if DataBox.is_empty(arg):
+            raise DataBox.ExtractFromEmpty("Given DataBox argument is empty.")
         #
         return arg[1]
     #
 ###
 
 if __name__ == "__main__":
-    def maybe_divide(nom, denom) -> Maybe_t:
+    def DataBox_divide(nom, denom) -> DataBox_t:
         if denom == 0:
-            return Maybe.make_nothing()
+            return DataBox.make_empty()
         #
         else:
-            return Maybe.make_some(nom/denom)
+            return DataBox.make_full(nom/denom)
     #
     
-    may1 = maybe_divide(12, 5)
+    may1 = DataBox_divide(12, 5)
     
-    if Maybe.is_some(may1):
-        print("First maybe data is valid.")
-        print("Its value = {}\n".format(Maybe.get_data(may1)))
+    if DataBox.is_some(may1):
+        print("First DataBox data is valid.")
+        print("Its value = {}\n".format(DataBox.get_data(may1)))
     #
     
-    may2 = maybe_divide(12, 0)
+    may2 = DataBox_divide(12, 0)
     
     
-    if Maybe.is_nothing(may2):
-        print("Second maybe data is invalid. Can't access the value.")
+    if DataBox.is_empty(may2):
+        print("Second DataBox data is invalid. Can't access the value.")
         pass # Or handle accordingly.
     #
     
-    print("If you try to get data from nothing, this exception is raised: ")
+    print("If you try to get data from an empty DataBox, this exception is raised: ")
     print(">>> ")
-    print(Maybe.get_data(may2)) # Raises an exception when may2 is nothing.
+    print(DataBox.get_data(may2)) # Raises an exception when may2 is empty.
 #
 
