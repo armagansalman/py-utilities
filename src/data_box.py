@@ -12,80 +12,36 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 """
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     > WHY
-    To be able to safely return null data.
+    To be able to properly represent undefined data.
     
 """
 
-from typing import Any
-from typing import Tuple
 
-DataBox_t = Tuple
+from typing import Any
+
 
 class DataBox():
-    # Custom implementation of Option type.
-
-    class ExtractFromEmpty(Exception):
-        pass
-    #
-    
-    @staticmethod
-    def empty_specifier():
-        nothing_spec = None
-        return nothing_spec
-        #
-    #
-
-    @staticmethod
-    def full_specifier():
-        some_spec = True
-        
-        assert(some_spec != DataBox.empty_specifier()) # Specifiers must be unique.
-        
-        return some_spec
-        #
-    #
-
-    @staticmethod
-    def make_full(data: Any) -> Tuple:
-        return (DataBox.full_specifier(), data)
-    #
-
-    @staticmethod
-    def make_empty() -> Tuple:
-        return (DataBox.empty_specifier(), False) # Second field is unimportant
-    #
-
-    @staticmethod
-    def is_some(arg: Tuple) -> bool:
-        return arg[0] == DataBox.full_specifier()
-    #
-
-    @staticmethod
-    def is_empty(arg: Tuple) -> bool:
-        return arg[0]  == DataBox.empty_specifier()
-    #
-
-    @staticmethod
-    def get_data(arg: Tuple) -> Any:
-        if DataBox.is_empty(arg):
-            raise DataBox.ExtractFromEmpty("Given DataBox argument is empty.")
-        #
-        return arg[1]
-    #
-###
-
-
-
-
-class DataBoxV2():
     #
     
     class ExtractFromEmpty(Exception):
         pass
     #
+
+    def __init__(self, data: Any, fill_choice: str):
+        if fill_choice == "empty":
+            self.call_func = DataBox.create_accessors(data=None, make_empty=True)
+        #
+        elif fill_choice == "fill":
+            self.call_func = DataBox.create_accessors(data, make_empty=False)
+        #
+        else:
+            self.call_func = DataBox.create_accessors(data, make_empty=False)
+        #
+    #
     
-    def __init__(self, data, make_empty=False):
-        def spawner():
+    @staticmethod
+    def create_accessors(data: Any, make_empty):
+        def box_spawner():
             empty_val = None
             full_val = True
             
@@ -107,71 +63,89 @@ class DataBoxV2():
                 return not is_empty()
             #
             
-            def get_data():
+            def peek():
                 if is_full():
                     return vessel[1]
                 #
                 else:
-                    raise DataBoxV2.ExtractFromEmpty("Given DataBox argument is empty.")
+                    raise DataBox.ExtractFromEmpty("Given DataBox argument is empty.")
                 #
             #
             
             fun_collection = dict()
             fun_collection["is_empty"] = is_empty
             fun_collection["is_full"] = is_full
-            fun_collection["get_data"] = get_data
+            fun_collection["peek"] = peek
             
             def func_accessor(func_name: str):
                 func = fun_collection[func_name]
                 return func()
             #
             
-            self.funcs = func_accessor
-        #
+            return func_accessor
+        # box_spawner
+        
+        return box_spawner() # Call to create accessor function.
     # __init__
     
-    def is_empty():
-        func = self.funcs["is_empty"]
-        return func()
+    def is_empty(self):
+        res = self.call_func("is_empty")
+        return res
     #
     
-    def is_full():
-        func = self.funcs["is_full"]
-        return func()
+    def is_full(self):
+        res = self.call_func("is_full")
+        return res
+    #
+
+    def peek(self):
+        res = self.call_func("peek")
+        return res
     #
     
-    def get_data():
-        func = self.funcs["get_data"]
-        return func()
+    @staticmethod
+    def empty_box():
+        return DataBox(0, "empty")
     #
-#
+    
+    @staticmethod
+    def box(data):
+        return DataBox(data, "fill")
+    #
+    
+# DataBox class
 
 
 if __name__ == "__main__":
-    def DataBox_divide(nom, denom) -> DataBox_t:
+    import sys
+    
+    def DataBox_divide(nom, denom) -> DataBox:
         if denom == 0:
-            return DataBox.make_empty()
+            return DataBox.empty_box()
         #
         else:
-            return DataBox.make_full(nom/denom)
+            return DataBox.box(nom/denom) # Make a filled DataBox.
+        #
     #
     
-    may1 = DataBox_divide(12, 5)
+    box1 = DataBox_divide(12, 5)
     
-    if DataBox.is_some(may1):
-        print("First DataBox data is valid.")
-        print("Its value = {}\n".format(DataBox.get_data(may1)))
-    #
+    print("++++++++++++++++")
+    print(box1)
+    print(sys.getsizeof(box1))
+    print("box1 is_empty:", box1.is_empty())
+    print(box1.is_full())
+    print(box1.peek())
     
-    may2 = DataBox_divide(12, 0)
+    
+    box2 = DataBox_divide(12, 0)
+    
+    print("++++++++++++++++")
+    print(box2)
+    print(sys.getsizeof(box2))
+    print("box2 is_empty:", box2.is_empty())
+    print(box2.is_full())
+    print(box2.peek())
+# if main
     
     
-    if DataBox.is_empty(may2):
-        print("Second DataBox data is invalid. Can't access the value.")
-        pass # Or handle accordingly.
-    #
-    
-    print("If you try to get data from an empty DataBox, this exception is raised: ")
-    print(">>> ")
-    print(DataBox.get_data(may2)) # Raises an exception when may2 is empty.
-#
