@@ -147,5 +147,17 @@ if __name__ == "__main__":
     print(box2.is_full())
     print(box2.peek())
 # if main
-    
-    
+
+
+"""
+def create_const(const):
+    a = copy.deepcopy(const)
+    def read():
+        return copy.deepcopy(a)
+    #
+    return read
+#
+
+const_val = create_const(1234)
+const_val() # reads const val
+"""
