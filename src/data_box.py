@@ -20,47 +20,49 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 from typing import Any
 
 
-class DataBox():
-    #
     
-    class ExtractFromEmpty(Exception):
-        pass
+class ExtractFromUndefined(Exception):
+    pass
+#
+
+
+class DataBox():
     #
 
     def __init__(self, data: Any, fill_choice: str):
-        if fill_choice == "empty":
-            self.call_func = DataBox.create_accessors(data=None, make_empty=True)
+        if fill_choice == "undefined":
+            self.call_func = DataBox.create_accessors(data=None, make_undefined=True)
         #
         elif fill_choice == "fill":
-            self.call_func = DataBox.create_accessors(data, make_empty=False)
+            self.call_func = DataBox.create_accessors(data, make_undefined=False)
         #
         else:
-            self.call_func = DataBox.create_accessors(data, make_empty=False)
+            self.call_func = DataBox.create_accessors(data, make_undefined=False)
         #
     #
     
     @staticmethod
-    def create_accessors(data: Any, make_empty):
+    def create_accessors(data: Any, make_undefined):
         def box_spawner():
-            empty_val = None
+            undefined_val = None
             full_val = True
             
             vessel = tuple()
             
-            if make_empty:
-                vessel = (empty_val, empty_val)
+            if make_undefined:
+                vessel = (undefined_val, undefined_val)
             #
             else:
                 vessel = (full_val, data)
             #
             
-            def is_empty():
-                assert(empty_val != full_val)
-                return vessel[0] == empty_val
+            def is_undefined():
+                assert(undefined_val != full_val)
+                return vessel[0] == undefined_val
             #
             
             def is_full():
-                return not is_empty()
+                return not is_undefined()
             #
             
             def peek():
@@ -68,12 +70,12 @@ class DataBox():
                     return vessel[1]
                 #
                 else:
-                    raise DataBox.ExtractFromEmpty("Given DataBox argument is empty.")
+                    raise DataBox.ExtractFromUndefined("Given DataBox argument is undefined.")
                 #
             #
             
             fun_collection = dict()
-            fun_collection["is_empty"] = is_empty
+            fun_collection["is_undefined"] = is_undefined
             fun_collection["is_full"] = is_full
             fun_collection["peek"] = peek
             
@@ -88,8 +90,8 @@ class DataBox():
         return box_spawner() # Call to create accessor function.
     # __init__
     
-    def is_empty(self):
-        res = self.call_func("is_empty")
+    def is_undefined(self):
+        res = self.call_func("is_undefined")
         return res
     #
     
@@ -104,8 +106,8 @@ class DataBox():
     #
     
     @staticmethod
-    def empty_box():
-        return DataBox(0, "empty")
+    def undefined_box():
+        return DataBox(0, "undefined")
     #
     
     @staticmethod
@@ -121,7 +123,7 @@ if __name__ == "__main__":
     
     def DataBox_divide(nom, denom) -> DataBox:
         if denom == 0:
-            return DataBox.empty_box()
+            return DataBox.undefined_box()
         #
         else:
             return DataBox.box(nom/denom) # Make a filled DataBox.
@@ -133,7 +135,7 @@ if __name__ == "__main__":
     print("++++++++++++++++")
     print(box1)
     print(sys.getsizeof(box1))
-    print("box1 is_empty:", box1.is_empty())
+    print("box1 is_undefined:", box1.is_undefined())
     print(box1.is_full())
     print(box1.peek())
     
@@ -143,7 +145,7 @@ if __name__ == "__main__":
     print("++++++++++++++++")
     print(box2)
     print(sys.getsizeof(box2))
-    print("box2 is_empty:", box2.is_empty())
+    print("box2 is_undefined:", box2.is_undefined())
     print(box2.is_full())
     print(box2.peek())
 # if main
