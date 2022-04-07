@@ -63,7 +63,7 @@ class Either:
             ###
             
             @staticmethod
-            def get_left_or(alternative: Any):
+            def get_left_or(alternative: Any = None):
                 if InnerEither.is_left():
                     return container[1]
                 #
@@ -73,7 +73,7 @@ class Either:
             ###
             
             @staticmethod
-            def get_right_or(alternative: Any):
+            def get_right_or(alternative: Any = None):
                 if InnerEither.is_right():
                     return container[1]
                 #
