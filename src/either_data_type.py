@@ -31,9 +31,9 @@ class Either:
     
     @staticmethod
     def create_either(value_arg: Any, left_or_right: int):
-        # if left_or_right == 0 -->> returns an Either.Left with a value of given value.
+        # if left_or_right == 0 -->> returns an Either.Left with a value 
+        # of given value.
         # else, returns an Either.Right with a value of given value.
-        #
         
         assert(Either.LEFT_TYPE_INDICATOR != Either.RIGHT_TYPE_INDICATOR)
         
@@ -83,6 +83,7 @@ class Either:
             ###
             
         ### End: class InnerEither
+        
         
         return InnerEither()  
     ### End: create_either
