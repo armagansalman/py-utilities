@@ -21,6 +21,88 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+
+from typing import Any
+
+
+class Either:    
+    
+    @staticmethod
+    def create_either(value_arg: Any, left_or_right: str):
+        # if left_or_right == "left" -->> returns an Either.Left with a value 
+        # of given value_arg.
+        # else, returns an Right tagged type with a value of given value_arg.
+        
+        LEFT_TYPE_INDICATOR = 0
+        RIGHT_TYPE_INDICATOR = 1
+        
+        assert(LEFT_TYPE_INDICATOR != RIGHT_TYPE_INDICATOR)
+        
+        container = None
+        
+        if left_or_right == "left":
+            container = (LEFT_TYPE_INDICATOR, value_arg)
+        #
+        elif left_or_right == "right":
+            container = (RIGHT_TYPE_INDICATOR, value_arg)
+        #
+        else:
+            raise Error("Invalid selector value used in creation.")
+        #
+        
+        assert(container != None)
+        
+        class InnerEither:
+            
+            @staticmethod
+            def is_left():
+                return container[0] == LEFT_TYPE_INDICATOR
+            ###
+            
+            @staticmethod
+            def is_right():
+                return container[0] == RIGHT_TYPE_INDICATOR
+            ###
+            
+            @staticmethod
+            def get_left_or(alternative: Any = None):
+                if InnerEither.is_left():
+                    return container[1]
+                #
+                else:
+                    return alternative
+                #
+            ###
+            
+            @staticmethod
+            def get_right_or(alternative: Any = None):
+                if InnerEither.is_right():
+                    return container[1]
+                #
+                else:
+                    return alternative
+                #
+            ###
+            
+        ### End: class InnerEither
+        
+        
+        return InnerEither()
+    ### End: create_either
+    
+    @staticmethod
+    def left(value):
+        return Either.create_either(value, "left")
+    ###
+    
+    @staticmethod
+    def right(value):
+        return Either.create_either(value, "right")
+    ###
+    
+### End: class Either
+
+
 class Option:
     """
     None type
@@ -71,17 +153,4 @@ class Option:
         #
     ###
     
-### End> class Option
-
-if __name__ == "__main__":
-    some = Option.some("data")
-    print(some.is_some())
-    print(some.is_none())
-    print(some.get_data())
-
-    none = Option.none()
-
-    print(none.is_some())
-    print(none.is_none())
-    print(none.get_data())
-#
+### End >> class Option

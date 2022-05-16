@@ -26,40 +26,42 @@ from typing import Any
 
 
 class Either:    
-    LEFT_TYPE_INDICATOR = 0
-    RIGHT_TYPE_INDICATOR = 1
     
     @staticmethod
-    def create_either(value_arg: Any, left_or_right: int):
-        # if left_or_right == 0 -->> returns an Either.Left with a value 
+    def create_either(value_arg: Any, left_or_right: str):
+        # if left_or_right == "left" -->> returns an Either.Left with a value 
         # of given value.
-        # else, returns an Either.Right with a value of given value.
+        # else, returns an Right tagged type with a value of given value.
         
-        assert(Either.LEFT_TYPE_INDICATOR != Either.RIGHT_TYPE_INDICATOR)
+        LEFT_TYPE_INDICATOR = 0
+        RIGHT_TYPE_INDICATOR = 1
+        
+        assert(LEFT_TYPE_INDICATOR != RIGHT_TYPE_INDICATOR)
         
         container = None
         
-        if left_or_right == Either.LEFT_TYPE_INDICATOR:
-            container = (Either.LEFT_TYPE_INDICATOR, value_arg)
+        if left_or_right == "left":
+            container = (LEFT_TYPE_INDICATOR, value_arg)
         #
-        elif left_or_right == Either.RIGHT_TYPE_INDICATOR:
-            container = (Either.RIGHT_TYPE_INDICATOR, value_arg)
+        elif left_or_right == "right":
+            container = (RIGHT_TYPE_INDICATOR, value_arg)
         #
         else:
             raise Error("Invalid selector value used in creation.")
         #
         
+        assert(container != None)
         
         class InnerEither:
             
             @staticmethod
             def is_left():
-                return container[0] == Either.LEFT_TYPE_INDICATOR
+                return container[0] == LEFT_TYPE_INDICATOR
             ###
             
             @staticmethod
             def is_right():
-                return container[0] == Either.RIGHT_TYPE_INDICATOR
+                return container[0] == RIGHT_TYPE_INDICATOR
             ###
             
             @staticmethod
@@ -85,34 +87,68 @@ class Either:
         ### End: class InnerEither
         
         
-        return InnerEither()  
+        return InnerEither()
     ### End: create_either
     
     @staticmethod
     def left(value):
-        return Either.create_either(value, Either.LEFT_TYPE_INDICATOR)
+        return Either.create_either(value, "left")
     ###
     
     @staticmethod
     def right(value):
-        return Either.create_either(value, Either.RIGHT_TYPE_INDICATOR)
+        return Either.create_either(value, "right")
     ###
     
 ### End: class Either
 
+def test_left():
+    orig_val = "left val"
+    orig_alt_val = "alt"
+    
+    lf = Either.left(orig_val)
+    
+    assert(lf.is_left())
+    assert(not lf.is_right())
+    
+    real_val = lf.get_left_or()
+    alt_val = lf.get_right_or(orig_alt_val)
+    
+    assert(real_val == orig_val)
+    assert(orig_alt_val == alt_val)
+    
+    # Get left's value when it's left type.
+    assert(orig_val == lf.get_left_or("dummy"))
+###
+
+def test_right():
+    orig_val = "right val"
+    orig_alt_val = "alt"
+    
+    rht = Either.right(orig_val)
+    
+    assert(rht.is_right())
+    assert(not rht.is_left())
+    
+    real_val = rht.get_right_or()
+    alt_val = rht.get_left_or(orig_alt_val)
+    
+    assert(real_val == orig_val)
+    assert(orig_alt_val == alt_val)
+    
+    # Get right's value when it's right type.
+    assert(orig_val == rht.get_right_or("dummy"))
+###
+
 
 if __name__ == "__main__":
-    eit_l = Either.left("left value")
-    eit_r = Either.right("right value")
-
-    print(eit_l.is_left())
-    print(eit_l.get_left_or(555))
-    print(eit_r.get_left_or(555))
-
-    print(eit_r.is_left())
-    print(eit_r.is_right())
-    print(eit_r.get_left_or(777))
-    print(eit_l.get_left_or(777))
-
-    print(eit_l)
+    
+    test_funs = [test_left, test_right]
+    
+    for test in test_funs:
+        test()
+        print("Test '{}' passed.".format(test.__name__))
+    #
+    
+    print("All tests passed.")
 #
