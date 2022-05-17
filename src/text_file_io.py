@@ -25,14 +25,80 @@ SOFTWARE.
 """
 
 
-#(
-t_Bool = bool
-t_Str = str
 
-from typing import Tuple as t_Tuple # Can't use tuple[list[str], str] for 
-    # Python ver. below 3.8 ; must use typing.Tuple
-from typing import Set as t_Set
-from typing import List as t_List
-from typing import Dict as t_Dict
-from typing import Callable as t_Callable
+import os
+
+from type_aliases import *
+
+
+
+def write_textlist_general(fileref: t_Str, data: t_List[t_Str], \
+                            filemode: t_Str, encoding_prm: t_Str):
+#(
+    with open(fileref, filemode, encoding=encoding_prm) as fobj:
+    #(
+        for text in data:
+        #(
+            fobj.write(text)
+        #)
+    #)
 #)
+
+
+def remove_file(fileref: t_Str) -> t_Bool:
+#(
+    if os.path.isfile(fileref):
+    #(
+        os.remove(fileref)
+        return True
+    #)
+    
+    return False
+#)
+
+
+def append_utf8_list(fileref: t_Str, data: t_List[t_Str]):
+#(
+    write_textlist_general(fileref, data, filemode="a", encoding_prm="utf8")
+#)
+
+
+def try_1():
+#(
+    data = ["abc", "def", "şğüçö"]
+    
+    append_utf8_list("test-out.txt", data)
+#)
+
+
+def try_2():
+#(
+    data = ["abc", "def", "şğüçö"]
+    
+    write_utf8_list("test-out.txt", data)
+#)
+
+
+def try_3():
+#(
+    fref = "test-out.txt"
+    remove_file(fref)
+#)
+
+
+if __name__ == "__main__":
+#(
+    # try_1()
+    # try_2()
+    try_3()
+#)
+
+
+
+
+
+
+
+
+
+
