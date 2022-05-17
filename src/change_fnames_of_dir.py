@@ -111,14 +111,30 @@ def add_str_to_first_word(to_append: str) -> NameGenFun_t:
         return splitter.join(parts)
     ###
     return concatter
-#
+###
 
 
-dirp = "."
-dirp = "C:\\Users\\armagan\\Desktop\\Temp items\\music change name"
+def prepend_str_to_first_word(to_prepend: str) -> NameGenFun_t:
+    def concatter(arg: NameDir_t):
+        name = arg[0]
+        splitter = ' '
+        parts = name.split(splitter)
+        first_word = parts[0]
+        added = str(to_prepend) + first_word
+        parts[0] = added
+        
+        return splitter.join(parts)
+    ###
+    return concatter
+###
+
+
+# dirp = "."
+# dirp = "C:\\Users\\armagan\\Desktop\\Temp items\\music change name"
+dirp = "D:/Documents/Aile/tmp music/to change names_2"
 
 mult_name_dir = names_under_dir(dirp)
-old_names = mult_name_dir[0]
+old_names, orig_dir = mult_name_dir
 
 generated_namesdir = bulk_generate_names(mult_name_dir, crop_from_start("9convert.com - "))
 
@@ -138,7 +154,11 @@ for i in range(len(generated)):
 #
 """
 
-generated_namesdir2 = bulk_generate_names(generated_namesdir, add_str_to_first_word(",4"))
+str_to_add = ",5"
+generated_namesdir2 = bulk_generate_names( generated_namesdir, add_str_to_first_word(str_to_add) )
+
+# str_to_add = "7,"
+# generated_namesdir2 = bulk_generate_names( generated_namesdir, prepend_str_to_first_word(str_to_add) )
 
 generated = generated_namesdir2[0]
 folder = generated_namesdir2[1]
@@ -147,16 +167,43 @@ new_names = generated
 
 assert(len(old_names) == len(new_names))
 
-
+"""
 for i in range(len(generated)):
     orig, genr = old_names[i], new_names[i]
     print("+++++++++++++++++++++++++++++")
     print("Folder: {}".format(folder))
     print("old -> new preview = <<{}>> ### <<{}>>".format(orig, genr))
 #
+"""
 
+#(
+import shutil
+
+source_dir = orig_dir
+source_names = old_names
+
+dest_dir = os.path.join(source_dir, "renamed copies")
+dest_names = new_names
+
+
+for i in range(len(generated)):
+    src, dest = source_names[i], dest_names[i]
     
-
+    source_full = os.path.join(source_dir, src)
+    dest_full = os.path.join(dest_dir, dest)
+    
+    print("+++++++++++++++++++++++++++++")
+    print(source_full)
+    print("will be copied to:")
+    print(dest_full)
+    
+    
+    # Use copy after you're sure you have the right data.
+    if os.path.isfile(source_full):
+        # shutil.copy(source_full, dest_full)
+    #
+#
+#)
 
 
 
