@@ -26,16 +26,11 @@ SOFTWARE.
 
 
 #(
-from typing import Tuple as t_Tuple # Can't use tuple[list[str], str] for 
-    # Python ver. below 3.8 ; must use typing.Tuple
-from typing import List as t_List
-from typing import Dict as t_Dict
-from typing import Callable as t_Callable
-
+from type_aliases import *
 # Additional type definitions:
-t_Str = str
 t_StrData = t_Dict
 t_StrPack = t_Tuple[t_Str, t_StrData]
+t_StrPackList = t_List[t_StrPack]
 
 t_PackCreator = t_Callable[[t_StrPack], t_StrPack] # Using a string and its 
     # data, creates a new string.
@@ -82,19 +77,40 @@ def transform_string(pack_arg: t_StrPack, CREATORS: t_PackCreatorList) \
 #)
 
 
+#(
+def multiple_string_transform(packs: t_StrPackList, CREATORS: t_PackCreatorList) \
+            -> t_StrPackList:
+    #
+    transformed_packs = map(lambda x: transform_string(x, CREATORS), packs)
+    
+    return list(transformed_packs)
+#)
+
+
 # TODO(armagan)__2022.05.16_20.28:
 # ?Use reduce to reach string result?
 
 
 #(
-pack: t_StrPack = (" 123 456,789", {})
-strg, data = omit_first_word(pack)
-# print(strg)
+def try_1():
+    pack: t_StrPack = (" 123 456,789", {})
+    strg, data = omit_first_word(pack)
+    print(strg)
+###
 #)
 
+
 #(
-pack: t_StrPack = (" 123 456,789 10 11 12-13  14", {})
-creators: t_PackCreatorList = [omit_first_word, omit_first_word]
-res = transform_string(pack, creators)
-print(res)
+def try_2():
+    multi_packs: t_StrPackList = [ \
+        (" 123 456,789 10 11 12-13  14", {}) \
+        ,(" 123 456,789 10 11 12-13  14", {}) ]
+    #
+    creators: t_PackCreatorList = [omit_first_word, omit_first_word]
+    res = multiple_string_transform(multi_packs, creators)
+    print(res)
+###
 #)
+
+
+# try_2()
