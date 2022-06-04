@@ -128,85 +128,80 @@ def prepend_str_to_first_word(to_prepend: str) -> NameGenFun_t:
     return concatter
 ###
 
-
-# dirp = "."
-# dirp = "C:\\Users\\armagan\\Desktop\\Temp items\\music change name"
-dirp = "D:/Documents/Aile/tmp music/to change names_2"
-
-mult_name_dir = names_under_dir(dirp)
-old_names, orig_dir = mult_name_dir
-
-generated_namesdir = bulk_generate_names(mult_name_dir, crop_from_start("9convert.com - "))
-
-"""
-generated = generated_namesdir[0]
-folder = generated_namesdir[1]
-
-new_names = generated
-"""
-
-"""
-for i in range(len(generated)):
-    orig, genr = old_names[i], new_names[i]
-    print("+++++++++++++++++++++++++++++")
-    print("Folder: {}".format(folder))
-    print("old -> new preview = <<{}>> # <<{}>>".format(orig, genr))
-#
-"""
-
-str_to_add = ",5"
-generated_namesdir2 = bulk_generate_names( generated_namesdir, add_str_to_first_word(str_to_add) )
-
-# str_to_add = "7,"
-# generated_namesdir2 = bulk_generate_names( generated_namesdir, prepend_str_to_first_word(str_to_add) )
-
-generated = generated_namesdir2[0]
-folder = generated_namesdir2[1]
-
-new_names = generated
-
-assert(len(old_names) == len(new_names))
-
-"""
-for i in range(len(generated)):
-    orig, genr = old_names[i], new_names[i]
-    print("+++++++++++++++++++++++++++++")
-    print("Folder: {}".format(folder))
-    print("old -> new preview = <<{}>> ### <<{}>>".format(orig, genr))
-#
-"""
-
+def modify_as_necessary(ready_to_run):
 #(
-import shutil
-
-source_dir = orig_dir
-source_names = old_names
-
-dest_dir = os.path.join(source_dir, "renamed copies")
-dest_names = new_names
-
-
-for i in range(len(generated)):
-    src, dest = source_names[i], dest_names[i]
+    if ready_to_run == False:
+    #(
+        raise Exception("Modify this function to your needs before running it.")
+    #)
     
-    source_full = os.path.join(source_dir, src)
-    dest_full = os.path.join(dest_dir, dest)
-    
-    print("+++++++++++++++++++++++++++++")
-    print(source_full)
-    print("will be copied to:")
-    print(dest_full)
-    
-    
-    # Use copy after you're sure you have the right data.
-    if os.path.isfile(source_full):
-        # shutil.copy(source_full, dest_full)
-    #
-#
+    dirpath = "D:/Documents/Aile/tmp music/music name processing"
+
+    mult_name_dir = names_under_dir(dirpath)
+    old_names, orig_dir = mult_name_dir
+
+    generated_namesdir = bulk_generate_names(mult_name_dir, crop_from_start("9convert.com - "))
+
+
+    str_to_add = ",6"
+    generated_namesdir2 = bulk_generate_names( generated_namesdir, add_str_to_first_word(str_to_add) )
+
+    # str_to_add = "7,"
+    # generated_namesdir2 = bulk_generate_names( generated_namesdir, prepend_str_to_first_word(str_to_add) )
+
+    generated = generated_namesdir2[0]
+    folder = generated_namesdir2[1]
+
+    new_names = generated
+
+    assert(len(old_names) == len(new_names))
+
+    import shutil
+
+    source_dir = orig_dir
+    source_names = old_names
+
+    new_dir_name = "renamed copies"
+    dest_dir = os.path.join(source_dir, new_dir_name)
+    dest_names = new_names
+
+    if not os.path.isdir(dest_dir): # Make sure destination directory is present.
+    #(
+        os.mkdir(dest_dir)
+    #)
+    for i in range(len(generated)):
+    #(
+        src, dest = source_names[i], dest_names[i]
+        
+        source_full = os.path.join(source_dir, src)
+        dest_full = os.path.join(dest_dir, dest)
+        
+        print("+++++++++++++++++++++++++++++")
+        print(source_full)
+        print("will be copied to:")
+        print(dest_full)
+        
+        
+        # Use copy after you're sure you have the right data.
+        if os.path.isfile(source_full):
+        #(
+            res = shutil.copy(source_full, dest_full)
+            print(res)
+            print("[ INFO ] Copied from {}".format(source_full))
+            print("[ INFO ] TO {}".format(dest_full))
+        #)
+        else:
+        #(
+            print("[ ERROR ] {} was not copied.".format(source_full))
+        #)
+    #)
 #)
 
-
-
+if __name__ == "__main__":
+#(
+    ready_to_run = False
+    modify_as_necessary(ready_to_run)
+#)
 
 
 
