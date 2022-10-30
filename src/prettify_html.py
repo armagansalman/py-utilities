@@ -41,7 +41,7 @@ import types_builtin as B
 def prettify_html(text_html: B.t_Str) -> B.t_Str:
     """doc"""
 #(
-    soup = BSp(text_html)
+    soup = BSp(text_html, features="html.parser")
     
     pretty_html = soup.prettify()
     
@@ -165,34 +165,35 @@ def prettify_then_write(source_path_html: B.t_Str \
 def main(args):
     """doc"""
 #(
-    txt_file_path = "/home/genel/Documents/Git_Local/armagansalman.github.io/index.html"
-    text = read_text_file(txt_file_path)
-    #
-    pretty_html = prettify_html(text)
-    #
-    """
-    print("[- Read File -]")
-    print(f"{text}")
-    print("[- SEPARATOR -]")
-    """
-    #
-    ##print("[- Prettified -]")
-    #print(f"{pretty_html}")
-    ##print("[- SEPARATOR -]")
-    #
-    #pthead, pttail = os.path.split(txt_file_path)
-    #
-    src_path = txt_file_path
-
-    pthead, pttail = os.path.split(txt_file_path)
+    src_path = args["source_path"]
+    
+    pthead, pttail = os.path.split(src_path)
     dest_path = os.path.join(pthead, "pretty_" + pttail)
 
-    prettify_then_write(src_path, dest_path)
+    success: B.t_Bool = prettify_then_write(src_path, dest_path)
+    
+    #( Report part.
+    if not success:
+    #(
+        destination_exists = os.path.isfile(dest_path)
+        de = destination_exists
+        
+        print(f"[ WARNING ] Didn't write pretty html to file. Destination exists: {de}. Overwrite is False by default.")
+    #)
+    else:
+    #(
+        print(f"[ INFO ] Pretty html was written to destination.")
+    #)
+    print(f"[ ; ] Source     : {src_path}")
+    print(f"[ ; ] Destination: {dest_path}")
+    #)
 #)
 #
 #
 if __name__ == "__main__":
 #(
-    params = {}
+    src_path = "./test_youtube.html"
+    params = {"source_path": src_path}
+    
     main(params)
 #)
