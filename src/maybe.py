@@ -29,106 +29,85 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-
-
-class NothingType():
+#
+#
+class Maybe:
 #(
-    pass
-#)
-
-
-class SomethingType():
-#(
-    pass
-#)
-
-
-def make_nothing():
-#(
-    return [NothingType]
-#)
-
-
-def make_something(thing):
-#(
-    return [SomethingType, thing]
-#)
-
-
-def is_nothing(maybe_val):
-#(
-    return maybe_val[0] == NothingType
-#)
-
-
-def is_something(maybe_val):
-#(
-    return maybe_val[0] == SomethingType
-#)
-
-
-def get_something(maybe_val):
-#(
-    if is_something(maybe_val):
+    class Nothing:
     #(
-        return maybe_val[1]
+        __instance = None # Singleton instance.
+        
+        def __new__(cls, *args, **kwargs):
+        #(
+            if cls.__instance is None: # Create instance only once.
+            #(
+                cls.__instance = object.__new__(cls, *args, **kwargs)
+            #)
+            return cls.__instance
+        #)
+        def is_nothing(self):
+        #(
+            return True
+        #)
+        def is_something(self):
+        #(
+            return False
+        #)
+        def get_data(self):
+        #(
+            raise TypeError(f"{type(self)} type does not hold data.")
+        #)
     #)
-    
-    else:
+    class Something:
     #(
-        raise Exception(f"{str(maybe_val)} is not something. Given argument must be created with make_something.")
-    #)
-#)
-
-
-def get_or_default(maybe_val, default_val):
-#(
-    try:
-    #(
-        return get_something(maybe_val)
-    #)
-    except:
-    #(
-        return default_val
+        __data = None
+        
+        def __init__(self, data):
+        #(
+            self.__data = data
+        #)
+        def is_nothing(self):
+        #(
+            return False
+        #)
+        def is_something(self):
+        #(
+            return True
+        #)
+        def get_data(self):
+        #(
+            return self.__data
+        #)
     #)
 #)
-
-
-
+#
+#
 def main():
 #(
-    s = make_something([1,2,3])
-    n = make_nothing()
+    data = "333"
+    nt: Maybe = Maybe.Nothing()
+    st: Maybe = Maybe.Something(data)
     
+    print(nt)
+    print(Maybe.Nothing())
+    print(st)
     
-    assert(is_nothing(s) == False)
-    
-    assert(is_nothing(n) == True)
-    
-    assert(is_something(s) == True)
-    assert(is_something(n) == False)
-    
-    assert(get_something(s) == [1,2,3])
-    
-    assert(get_or_default(n, "default") == "default")
+    assert(nt.is_nothing() == True)
+    assert(nt.is_something() == False)
     
     try:
     #(
-        assert(get_something([1,2,3])) # Should raise an Exception.
+        nt.get_data()
     #)
-    except:
+    except Exception as Err:
     #(
-        pass
+        print(Err)
     #)
     
-    try:
-    #(
-        assert(get_something(n)) # Should raise an Exception.
-    #)
-    except:
-    #(
-        pass
-    #)
+    assert(st.is_nothing() == False)
+    assert(st.is_something() == True)
+    
+    assert(st.get_data() == data)
     
     print(f"[ INFO ] All assertions passed for {__name__}.")
 #)
