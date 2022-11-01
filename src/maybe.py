@@ -31,19 +31,24 @@ SOFTWARE.
 """
 #
 #
+from typing import (Any)
+#
+#
+t_Any = Any
+#
 class Maybe:
 #(
     class Nothing:
     #(
-        __instance = None # Singleton instance.
+        _instance = None # Singleton instance.
         
         def __new__(cls, *args, **kwargs):
         #(
-            if cls.__instance is None: # Create instance only once.
+            if cls._instance is None: # Create instance only once.
             #(
-                cls.__instance = object.__new__(cls, *args, **kwargs)
+                cls._instance = object.__new__(cls, *args, **kwargs)
             #)
-            return cls.__instance
+            return cls._instance
         #)
         def is_nothing(self):
         #(
@@ -60,11 +65,11 @@ class Maybe:
     #)
     class Something:
     #(
-        __data = None
+        _data: t_Any
         
-        def __init__(self, data):
+        def __init__(self, data: t_Any):
         #(
-            self.__data = data
+            self._data = data
         #)
         def is_nothing(self):
         #(
@@ -76,7 +81,7 @@ class Maybe:
         #)
         def get_data(self):
         #(
-            return self.__data
+            return self._data
         #)
     #)
 #)
@@ -99,17 +104,18 @@ def main():
     #(
         nt.get_data()
     #)
-    except Exception as Err:
+    except TypeError as Err:
     #(
-        print(Err)
+        print(f"~[ INFO ]~ Caught expected error. ( Type: {type(Err)} ) ; ( Msg: {Err} )")
     #)
     
     assert(st.is_nothing() == False)
     assert(st.is_something() == True)
     
-    assert(st.get_data() == data)
+    x: int = st.get_data() # Mypy should report an error. st._data is str.
+    assert(x == data)
     
-    print(f"[ INFO ] All assertions passed for {__name__}.")
+    print(f"~[ INFO ]~ SUCCESS: All assertions passed for {__name__}.")
 #)
 
 
