@@ -30,14 +30,74 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 
-#(
-t_Bool = bool
-t_Str = str
+import hashlib
+from functools import partial
 
-from typing import Tuple as t_Tuple # Can't use tuple[list[str], str] for 
-    # Python ver. below 3.8 ; must use typing.Tuple
-from typing import Set as t_Set
-from typing import List as t_List
-from typing import Dict as t_Dict
-from typing import Callable as t_Callable
+import common_types as CT
+import file_io_helper as Mioh
+import path_functions as Mpfn
+
+
+def read_file_binary_chunked(fpath):
+#(
+	KB = 1024
+	MB = 1024 * KB
+	
+	CHUNK_SIZE = 16 * MB
+	
+	return Mioh.read_file_binary_chunked(fpath, CHUNK_SIZE)
 #)
+
+def sha512_hexdigest(fpath):
+#(
+	hobj = hashlib.sha512()
+	for chunk in read_file_binary_chunked(fpath):
+	#(
+		hobj.update(chunk)
+	#)
+	return hobj.hexdigest()
+#)
+
+def hash_file(fpath, digest_func):
+#(
+	return digest_func(fpath)
+#)
+
+def hash_all_dir_files(dirpath):
+#(
+	all_fpaths = Mpfn.get_fpaths_recursively(dirpath)
+	
+	return map(lambda X: (hash_file(X,sha512_hexdigest),X) , all_fpaths)
+#)
+
+if __name__ == "__main__":
+#(
+	"""
+	fpath = "./test_youtube.html"
+	
+	hexdigest = hash_file(fpath, sha512_hexdigest)
+	
+	print(f"sha512: {hexdigest} ~;~ {fpath}")
+	"""
+	
+	dirpath = "/home/genel/Documents/E-BOOK/"
+	
+	hash_iter = hash_all_dir_files(dirpath)
+	
+	for hsh, fpath in hash_iter:
+	#(
+		print(f"sha512: {hsh} ~;~ {fpath}")
+	#)
+#)
+
+
+
+
+
+
+
+
+
+
+
+

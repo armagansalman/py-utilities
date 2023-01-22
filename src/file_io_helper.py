@@ -30,14 +30,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 
+def read_file_binary_chunked(fpath, CHUNK_SIZE=None):
 #(
-t_Bool = bool
-t_Str = str
-
-from typing import Tuple as t_Tuple # Can't use tuple[list[str], str] for 
-    # Python ver. below 3.8 ; must use typing.Tuple
-from typing import Set as t_Set
-from typing import List as t_List
-from typing import Dict as t_Dict
-from typing import Callable as t_Callable
+	KB = 1024
+	MB = 1024 * KB
+	
+	if CHUNK_SIZE == None:
+		CHUNK_SIZE = 16 * MB
+	
+	with open(fpath, 'rb') as F:
+	#(
+		while True:
+		#(
+			chunk = F.read(CHUNK_SIZE)
+			if chunk:
+				yield chunk
+			else:
+				# The chunk was empty, which means we're at the end
+				# of the file
+				return
+		#)
+	#)
 #)
