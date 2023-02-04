@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 
-def read_file_binary_chunked(fpath, CHUNK_SIZE=None):
+def read_binary_chunked(fpath, CHUNK_SIZE=None):
 #(
 	KB = 1024
 	MB = 1024 * KB
@@ -38,11 +38,11 @@ def read_file_binary_chunked(fpath, CHUNK_SIZE=None):
 	if CHUNK_SIZE == None:
 		CHUNK_SIZE = 16 * MB
 	
-	with open(fpath, 'rb') as F:
+	with open(fpath, 'rb') as FL:
 	#(
 		while True:
 		#(
-			chunk = F.read(CHUNK_SIZE)
+			chunk = FL.read(CHUNK_SIZE)
 			if chunk:
 				yield chunk
 			else:
@@ -52,3 +52,21 @@ def read_file_binary_chunked(fpath, CHUNK_SIZE=None):
 		#)
 	#)
 #)
+
+def read_text_line_iter(fpath, ENCODING="utf-8"):
+#(
+	with open(fpath, 'r', encoding=ENCODING) as FL:
+	#(
+		while True:
+		#(
+			chunk = FL.readline()
+			if chunk:
+				yield chunk
+			else:
+				# The chunk was empty, which means we're at the end
+				# of the file
+				return
+		#)
+	#)
+#)
+

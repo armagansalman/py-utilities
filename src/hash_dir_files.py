@@ -34,7 +34,7 @@ import hashlib
 from functools import partial
 
 import common_types as CT
-import file_io_helper as Mioh
+import file_io_helper as Mfio
 import path_functions as Mpfn
 
 
@@ -45,7 +45,7 @@ def read_file_binary_chunked(fpath):
 	
 	CHUNK_SIZE = 16 * MB
 	
-	return Mioh.read_file_binary_chunked(fpath, CHUNK_SIZE)
+	return Mfio.read_file_binary_chunked(fpath, CHUNK_SIZE)
 #)
 
 def sha512_hexdigest(fpath):
@@ -80,14 +80,26 @@ if __name__ == "__main__":
 	print(f"sha512: {hexdigest} ~;~ {fpath}")
 	"""
 	
-	dirpath = "/home/genel/Documents/E-BOOK/"
+	"""
+	# _dirpath = "/home/genel/Documents/E-BOOK/"
+	dirpath = "/home/genel/Documents/ALL BOOKS-PAPERS/"
 	
 	hash_iter = hash_all_dir_files(dirpath)
 	
+	print(f"Directory: {dirpath}")
 	for hsh, fpath in hash_iter:
 	#(
 		print(f"sha512: {hsh} ~;~ {fpath}")
 	#)
+	"""
+	
+	fpath = "/home/genel/Documents/GIT-LOCAL/py-utilities/src/out~ALL-BOOKS~16MB.txt"
+	
+	line_iter = Mfio.read_text_line_iter(fpath)
+	
+	for x in line_iter:
+		print(x, end="")
+	
 #)
 
 
