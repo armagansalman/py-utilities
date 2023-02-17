@@ -53,6 +53,7 @@ def write_data_to_csv(file_path: Str \
 			, newline=newline) as file_handle:
 	#(
 		csvwriter = csv.writer(file_handle)
+		# Each row contains 0 or more elements (for example, a List).
 		for row in data_rows:
 		#(
 			csvwriter.writerow(row)
@@ -74,6 +75,7 @@ def read_data_from_csv(file_path: Str \
 		csvreader = csv.reader(file_handle)
 		row_list = []
 		
+		# Each row contains 0 or more elements (for example, a List).
 		for row in csvreader:
 		#(
 			row_list.append(row)
