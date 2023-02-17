@@ -1,6 +1,8 @@
 *.txt
 *.bak
 *.7z
+*.lnk
+*.link
 __pycache__/
 local/
 Output/
