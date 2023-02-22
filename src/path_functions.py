@@ -1,25 +1,64 @@
+"""
+BSD 3-Clause License
+
+Copyright (c) 2022-2023, Armağan Salman
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+"""
+
+
 import os
 import logging
+import typing as Typ
 
 import common_types as CT
 #from user_types import *
 
+# Type aliases:
+class T:
+#(
+	Str = str
+#)
 
-def get_absolute_path(path: CT.t_Str):
+
+def get_absolute_path(path: T.Str):
     """docstr"""
 # (
     return os.path.abspath(path)
 # )
 
 
-def is_file(path: CT.t_Str):
+def is_file(path: T.Str):
     """docstr"""
 # (
     return os.path.isfile(path)
 # )
 
 
-def ignore_redundant_subdirs(dirs: CT.t_Iter[CT.t_Str]):
+def ignore_redundant_subdirs(dirs: CT.t_Iter[T.Str]):
     """ If a dir D_1 is a descendant of a dir D_2, don't include D_1 as
         it will be included with recursive search of D_2. 
         WARNING: If a given path is a file, it will also be ignored.
@@ -64,7 +103,7 @@ def ignore_redundant_subdirs(dirs: CT.t_Iter[CT.t_Str]):
 # )
 
 
-def get_fpaths_recursively(PATH: CT.t_Str):
+def get_fpaths_recursively(PATH: T.Str):
     """docstr"""
 # (
     rec_files: list = []
@@ -99,12 +138,12 @@ def get_fpaths_recursively(PATH: CT.t_Str):
 # )
 
 
-def get_fpaths_from_path_iter(paths_iter: CT.t_List[CT.t_Str]):
+def get_fpaths_from_path_iter(paths_iter: CT.t_List[T.Str]):
     """docstr"""
 # (
-    if type(paths_iter[0]) != CT.t_Str or type(paths_iter[-1]) != CT.t_Str:
+    if type(paths_iter[0]) != T.Str or type(paths_iter[-1]) != T.Str:
         # (
-        raise Exception("A list of CT.t_Str must be given.")
+        raise Exception("A list of T.Str must be given.")
     # )
 
     file_paths: list = []

@@ -3,10 +3,12 @@
 *.7z
 *.lnk
 *.link
+*.json
+*.mypy*
+
 __pycache__/
 local/
 Output/
-*.mypy*
 
 
 # These are some examples of commonly ignored file patterns.
